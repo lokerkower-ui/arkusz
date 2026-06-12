@@ -3,217 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krakowski Detektyw: Certyfikat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Generator Certyfikatów - Grafika jako Szablon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg-color: #0b1325;
-            --card-bg: #1c2541;
-            --accent-gold: #f4d03f;
+            --bg-dark: #0a0f1d;
+            --bg-card: #141b2d;
             --accent-blue: #00b4d8;
-            --text-light: #f8f9fa;
-            --text-muted: #95a5a6;
-            --success: #2ecc71;
+            --text-light: #f4f6f9;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Montserrat', 'Segoe UI', sans-serif;
-            background: var(--bg-color);
-            background-image: radial-gradient(circle at 20% 30%, #1e3a8a 0%, transparent 70%), 
-                              radial-gradient(circle at 80% 80%, #0d1b2a 0%, transparent 70%);
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-dark);
             color: var(--text-light);
-            margin: 0;
-            padding: 15px;
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
-        /* Kontener formularza */
-        #form-container {
-            background: var(--card-bg);
-            border: 2px solid rgba(244, 208, 63, 0.2);
+        .config-card {
+            background: var(--bg-card);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            max-width: 650px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
 
-        #form-container::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 4px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold), var(--accent-blue));
-        }
-
-        .cert-form {
+        .input-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
+            text-align: left;
+            margin-bottom: 15px;
         }
 
-        .cert-form input {
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: #111a36;
-            color: white;
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+        }
+
+        .input-group input {
+            background: #0b101d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            color: #fff;
             font-size: 1rem;
-            width: 100%;
             outline: none;
-            transition: border-color 0.3s;
+            width: 100%;
         }
 
-        .cert-form input:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .menu-btn {
-            background: var(--success);
-            border: none;
-            color: white;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 12px;
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.25s ease;
-            text-align: center;
+            border: none;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            color: #fff;
         }
 
-        .menu-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
-        }
-
-        /* Kontener certyfikatu (Ekran) */
-        #cert-container {
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 900px; /* Ograniczenie szerokości na PC */
-            aspect-ratio: 297 / 210; /* Zachowanie proporcji A4 poziomo */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .cert-body {
-            width: 100%;
-            height: 100%;
-            background: #fffdf9;
-            color: #333;
-            padding: 5%; /* Procentowy padding, dopasowujący się do ekranu */
-            border: 8px double #d4af37;
-            outline: 3px solid #1e3d59;
-            outline-offset: -10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-family: 'Georgia', serif;
+        /* Kontener podglądu, w którym na Twoje zdjęcie nakładamy tekst */
+        .preview-box {
             position: relative;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            display: inline-block;
         }
 
-        /* Dynamiczne skalowanie tekstów na ekranach urządzeń */
-        .cert-title { font-size: max(1.8rem, 4vw); color: #1e3d59; margin: 0; font-weight: bold; letter-spacing: 2px;}
-        .cert-subtitle { font-size: max(0.7rem, 1.3vw); text-transform: uppercase; letter-spacing: 2px; color: #666; margin-top: 5px;}
-        .cert-name { font-size: max(1.4rem, 2.8vw); color: #d4af37; font-weight: bold; margin: 4% 0 2% 0; border-bottom: 2px solid #ddd; width: 70%; padding-bottom: 5px; font-family: 'Montserrat', sans-serif;}
-        .cert-text { font-size: max(0.75rem, 1.4vw); line-height: 1.5; max-width: 85%; margin: 1% 0; color: #444;}
-        .cert-footer { margin-top: 6%; width: 85%; display: flex; justify-content: space-between; font-size: max(0.6rem, 1.1vw); color: #555; font-family: 'Montserrat', sans-serif;}
-        .cert-sig { border-top: 1px solid #777; width: 35%; padding-top: 8px; text-align: center; }
+        .preview-box img {
+            width: 100%;
+            display: block;
+        }
 
-        /* =======================================================
-           STYLE DO DRUKU / ZAPISU PDF (Wymuszenie idealnego A4)
-           ======================================================= */
-        @media print {
-            @page {
-                size: A4 landscape;
-                margin: 0;
-            }
-            
-            body {
-                background: none;
-                background-image: none;
-                padding: 0;
-                margin: 0;
-                display: block;
-            }
-
-            #form-container {
-                display: none; /* Ukrywa formularz i przycisk przy druku */
-            }
-
-            #cert-container {
-                box-shadow: none;
-                padding: 0;
-                border-radius: 0;
-                width: 297mm;
-                height: 210mm;
-                max-width: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-            }
-
-            .cert-body {
-                width: 297mm;
-                height: 210mm;
-                padding: 25mm;
-                border: 15px double #d4af37;
-                outline: 5px solid #1e3d59;
-                outline-offset: -20px;
-                -webkit-print-color-adjust: exact; /* Wymuszenie kolorów tła w Chrome/Safari */
-                print-color-adjust: exact;
-            }
-
-            /* Sztywne rozmiary czcionek tylko dla wydruku A4 */
-            .cert-title { font-size: 46px; }
-            .cert-subtitle { font-size: 16px; }
-            .cert-name { font-size: 36px; margin: 30px 0 15px 0; width: 450px; }
-            .cert-text { font-size: 18px; max-width: 700px; }
-            .cert-footer { font-size: 14px; margin-top: 40px; width: 80%; }
+        /* Dynamiczny tekst nakładany na zdjęcie w podglądzie */
+        .overlay-text {
+            position: absolute;
+            /* TUTAJ DOPASOWUJESZ POZYCJĘ TEKSTU NA PODGLĄDZIE (w % względem zdjęcia) */
+            top: 55%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 5vw; /* Skaluje się razem z wielkością obrazka */
+            color: #0b2265;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="form-container">
-        <div class="cert-form">
-            <label for="player-name-input" style="font-weight: bold; color: var(--accent-gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Wpisz dane do arkusza:</label>
-            <input type="text" id="player-name-input" placeholder="np. Jan Kowalski" oninput="document.getElementById('cert-pdf-name').innerText = this.value || 'Jan Kowalski'">
-            <button class="menu-btn" onclick="window.print()">🖨 Drukuj / Zapisz jako PDF</button>
-        </div>
-    </div>
-
-    <div id="cert-container">
-        <div class="cert-body" id="cert-pdf-element">
-            <h1 class="cert-title">CERTYFIKAT ODKRYWCY</h1>
-            <p class="cert-subtitle">Gry Miejskiej: Krakowski Detektyw</p>
-            <p class="cert-text" style="margin-top: 3%;">Niniejszym zaświadcza się, że wybitny śledczy</p>
-            <div class="cert-name" id="cert-pdf-name">Jan Kowalski</div>
-            <p class="cert-text">wykazał się niezwykłą mądrością, spostrzegawczością oraz bezbłędną wiedzą, rozwiązując wszystkie zagadki na mapie tajemnic.</p>
-            
-            <div class="cert-footer">
-                <div class="cert-sig">Data: 2026 r.</div>
-                <div class="cert-sig">Główny Inspektor Miasta</div>
+    <div class="container">
+        
+        <div class="config-card">
+            <div class="input-group">
+                <label for="name-input">Imię i Nazwisko Śledczego</label>
+                <input type="text" id="name-input" placeholder="Wpisz dane..." value="Jan Kowalski">
             </div>
+            <button class="btn" id="download-btn">📥 Generuj i Pobierz</button>
         </div>
+
+        <div class="preview-box">
+            <img id="cert-image-source" src="certyfikat.jpg" alt="Szablon Certyfikatu">
+            <div class="overlay-text" id="name-display">Jan Kowalski</div>
+        </div>
+
     </div>
 
+    <script>
+        const nameInput = document.getElementById('name-input');
+        const nameDisplay = document.getElementById('name-display');
+        const certImageSource = document.getElementById('cert-image-source');
+        const downloadBtn = document.getElementById('download-btn');
+
+        // Podgląd w czasie rzeczywistym
+        nameInput.addEventListener('input', (e) => {
+            nameDisplay.innerText = e.target.value.trim() || 'Jan Kowalski';
+        });
+
+        // Generowanie finalnego pliku do pobrania
+        downloadBtn.addEventListener('click', () => {
+            downloadBtn.innerText = '⌛ Przetwarzanie...';
+            downloadBtn.disabled = true;
+
+            // Ładowanie szablonu jako obiektu Image w JavaScript
+            const certTemplate = new Image();
+            certTemplate.crossOrigin = "anonymous"; 
+            certTemplate.src = certImageSource.src; // Pobiera z tagu <img> powyżej
+
+            certTemplate.onload = function() {
+                const canvas = document.createElement('canvas');
+                // Canvas przyjmuje dokładnie takie wymiary, jakie ma Twoje zdjęcie certyfikat.jpg
+                canvas.width = certTemplate.width;
+                canvas.height = certTemplate.height;
+                const ctx = canvas.getContext('2d');
+
+                // 1. Rysujemy Twoje gotowe zdjęcie jako tło
+                ctx.drawImage(certTemplate, 0, 0, canvas.width, canvas.height);
+
+                // 2. Konfigurujemy styl tekstu imienia i nazwiska
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#0b2265'; // Kolor czcionki (możesz zmienić np. na czarny #000000)
+                
+                // Dynamicznie obliczamy wielkość czcionki, żeby pasowała do rozdzielczości zdjęcia
+                const fontSize = Math.round(canvas.width * 0.048); 
+                ctx.font = `italic bold ${fontSize}px "Playfair Display", Georgia, serif`;
+
+                // 3. Wpisujemy tekst na grafikę
+                // TUTAJ DOPASOWUJESZ POZYCJĘ TEKSTU NA FINALNYM PLIKU (X, Y)
+                const xNaZdjeciu = canvas.width / 2; // Środek szerokości
+                const yNaZdjeciu = canvas.height * 0.55; // 55% wysokości zdjęcia od góry
+                
+                ctx.fillText(nameDisplay.innerText, xNaZdjeciu, yNaZdjeciu);
+
+                // 4. Pobieranie gotowego, scalonego pliku
+                setTimeout(() => {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.download = `Certyfikat_${nameDisplay.innerText.replace(/\s+/g, '_')}.png`;
+                    link.href = dataUrl;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    downloadBtn.innerText = '📥 Generuj i Pobierz';
+                    downloadBtn.disabled = false;
+                }, 150);
+            };
+
+            certTemplate.onerror = function() {
+                alert("Błąd: Nie znaleziono pliku 'certyfikat.jpg' w tym samym folderze!");
+                downloadBtn.innerText = '📥 Generuj i Pobierz';
+                downloadBtn.disabled = false;
+            };
+        });
+    </script>
 </body>
 </html>
