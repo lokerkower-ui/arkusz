@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krakowski Detektyw: Certyfikat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0b1325;
@@ -15,6 +16,10 @@
             --success: #2ecc71;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Montserrat', 'Segoe UI', sans-serif;
             background: var(--bg-color);
@@ -22,25 +27,26 @@
                               radial-gradient(circle at 80% 80%, #0d1b2a 0%, transparent 70%);
             color: var(--text-light);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 30px;
+            justify-content: flex-start;
+            gap: 20px;
         }
 
+        /* Kontener formularza */
         #form-container {
             background: var(--card-bg);
             border: 2px solid rgba(244, 208, 63, 0.2);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             max-width: 650px;
             width: 100%;
-            box-sizing: border-box;
             position: relative;
+            overflow: hidden;
         }
 
         #form-container::before {
@@ -51,22 +57,25 @@
         }
 
         .cert-form {
-            margin: 15px 0;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            text-align: left;
         }
 
         .cert-form input {
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.2);
             background: #111a36;
             color: white;
             font-size: 1rem;
             width: 100%;
-            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .cert-form input:focus {
+            border-color: var(--accent-gold);
         }
 
         .menu-btn {
@@ -76,49 +85,109 @@
             padding: 14px;
             font-size: 1rem;
             font-weight: 600;
-            border-radius: 16px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.25s ease;
             text-align: center;
         }
 
         .menu-btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
         }
 
-        /* STYL ARKUSZA CERTYFIKATU (A4 Poziomo) */
+        /* Kontener certyfikatu (Ekran) */
         #cert-container {
             background: white;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 900px; /* Ograniczenie szerokości na PC */
+            aspect-ratio: 297 / 210; /* Zachowanie proporcji A4 poziomo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .cert-body {
-            width: 297mm;
-            height: 210mm;
+            width: 100%;
+            height: 100%;
             background: #fffdf9;
             color: #333;
-            box-sizing: border-box;
-            padding: 25mm;
-            border: 15px double #d4af37;
-            outline: 5px solid #1e3d59;
-            outline-offset: -20px;
+            padding: 5%; /* Procentowy padding, dopasowujący się do ekranu */
+            border: 8px double #d4af37;
+            outline: 3px solid #1e3d59;
+            outline-offset: -10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             font-family: 'Georgia', serif;
+            position: relative;
         }
 
-        .cert-title { font-size: 50px; color: #1e3d59; margin: 0; font-weight: bold; letter-spacing: 2px;}
-        .cert-subtitle { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-top: 5px;}
-        .cert-name { font-size: 36px; color: #d4af37; font-weight: bold; margin: 30px 0 15px 0; border-bottom: 2px solid #ddd; min-width: 450px; padding-bottom: 5px; font-family: 'Montserrat', sans-serif;}
-        .cert-text { font-size: 18px; line-height: 1.6; max-width: 700px; margin: 10px 0; color: #444;}
-        .cert-footer { margin-top: 50px; width: 80%; display: flex; justify-content: space-between; font-size: 14px; color: #555; font-family: 'Montserrat', sans-serif;}
-        .cert-sig { border-top: 1px solid #777; width: 180px; padding-top: 8px; text-align: center; }
+        /* Dynamiczne skalowanie tekstów na ekranach urządzeń */
+        .cert-title { font-size: max(1.8rem, 4vw); color: #1e3d59; margin: 0; font-weight: bold; letter-spacing: 2px;}
+        .cert-subtitle { font-size: max(0.7rem, 1.3vw); text-transform: uppercase; letter-spacing: 2px; color: #666; margin-top: 5px;}
+        .cert-name { font-size: max(1.4rem, 2.8vw); color: #d4af37; font-weight: bold; margin: 4% 0 2% 0; border-bottom: 2px solid #ddd; width: 70%; padding-bottom: 5px; font-family: 'Montserrat', sans-serif;}
+        .cert-text { font-size: max(0.75rem, 1.4vw); line-height: 1.5; max-width: 85%; margin: 1% 0; color: #444;}
+        .cert-footer { margin-top: 6%; width: 85%; display: flex; justify-content: space-between; font-size: max(0.6rem, 1.1vw); color: #555; font-family: 'Montserrat', sans-serif;}
+        .cert-sig { border-top: 1px solid #777; width: 35%; padding-top: 8px; text-align: center; }
+
+        /* =======================================================
+           STYLE DO DRUKU / ZAPISU PDF (Wymuszenie idealnego A4)
+           ======================================================= */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            
+            body {
+                background: none;
+                background-image: none;
+                padding: 0;
+                margin: 0;
+                display: block;
+            }
+
+            #form-container {
+                display: none; /* Ukrywa formularz i przycisk przy druku */
+            }
+
+            #cert-container {
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+                width: 297mm;
+                height: 210mm;
+                max-width: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .cert-body {
+                width: 297mm;
+                height: 210mm;
+                padding: 25mm;
+                border: 15px double #d4af37;
+                outline: 5px solid #1e3d59;
+                outline-offset: -20px;
+                -webkit-print-color-adjust: exact; /* Wymuszenie kolorów tła w Chrome/Safari */
+                print-color-adjust: exact;
+            }
+
+            /* Sztywne rozmiary czcionek tylko dla wydruku A4 */
+            .cert-title { font-size: 46px; }
+            .cert-subtitle { font-size: 16px; }
+            .cert-name { font-size: 36px; margin: 30px 0 15px 0; width: 450px; }
+            .cert-text { font-size: 18px; max-width: 700px; }
+            .cert-footer { font-size: 14px; margin-top: 40px; width: 80%; }
+        }
     </style>
 </head>
 <body>
@@ -135,8 +204,7 @@
         <div class="cert-body" id="cert-pdf-element">
             <h1 class="cert-title">CERTYFIKAT ODKRYWCY</h1>
             <p class="cert-subtitle">Gry Miejskiej: Krakowski Detektyw</p>
-            <br>
-            <p class="cert-text">Niniejszym zaświadcza się, że wybitny śledczy</p>
+            <p class="cert-text" style="margin-top: 3%;">Niniejszym zaświadcza się, że wybitny śledczy</p>
             <div class="cert-name" id="cert-pdf-name">Jan Kowalski</div>
             <p class="cert-text">wykazał się niezwykłą mądrością, spostrzegawczością oraz bezbłędną wiedzą, rozwiązując wszystkie zagadki na mapie tajemnic.</p>
             
