@@ -85,7 +85,7 @@
             color: #fff;
         }
 
-        /* Kontener podglądu */
+        /* Kontener podglądu z włączonym Container Queries dla idealnego skalowania czcionek */
         .preview-box {
             position: relative;
             width: 100%;
@@ -93,6 +93,7 @@
             border-radius: 4px;
             overflow: hidden;
             display: inline-block;
+            container-type: inline-size; /* Pozwala czcionkom skalować się względem szerokości TEGO kontenera, a nie okna */
         }
 
         .preview-box img {
@@ -110,25 +111,25 @@
             position: absolute;
         }
 
-        /* Imię i nazwisko */
+        /* Imię i nazwisko - używa cqi (procent szerokości kontenera podglądu) */
         .overlay-text {
             top: 64.5%; 
             left: 50%;
             transform: translate(-50%, -50%);
             width: 85%;
             text-align: center;
-            font-size: 4.2vw;
+            font-size: 4.5cqi; /* Sztywno zakleszczone ze skalą obrazka */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* Data w lewym dolnym rogu */
+        /* Data w lewym dolnym rogu - używa cqi */
         .overlay-date {
-            bottom: 9%;
+            bottom: 8.5%;
             left: 27%;
             transform: translate(-50%, 50%);
-            font-size: 2.8vw;
+            font-size: 3cqi; /* Sztywno zakleszczone ze skalą obrazka */
         }
     </style>
 </head>
@@ -163,21 +164,18 @@
         function getFormattedDate() {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Styczeń to 0!
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
             const yyyy = today.getFullYear();
             return `${dd}.${mm}.${yyyy} r.`;
         }
 
-        // Ustawienie aktualnej daty na starcie w podglądzie
         const currentDateText = getFormattedDate();
         dateDisplay.innerText = currentDateText;
 
-        // Podgląd imienia w czasie rzeczywistym
         nameInput.addEventListener('input', (e) => {
             nameDisplay.innerText = e.target.value.trim() || 'Jan Kowalski';
         });
 
-        // Generowanie finalnego pliku do pobrania
         downloadBtn.addEventListener('click', () => {
             downloadBtn.innerText = '⌛ Przetwarzanie...';
             downloadBtn.disabled = true;
@@ -198,9 +196,9 @@
                 // 2. Konfiguracja wspólna dla napisów
                 ctx.fillStyle = '#0b2265';
 
-                // --- RYSOWANIE IMIENIA ---
+                // --- RYSOWANIE IMIENIA (Canvas używa stałych pikseli obrazu źródłowego, więc skala jest zawsze idealna) ---
                 ctx.textAlign = 'center';
-                const fontSizeName = Math.round(canvas.width * 0.042); 
+                const fontSizeName = Math.round(canvas.width * 0.045); 
                 ctx.font = `italic bold ${fontSizeName}px "Playfair Display", Georgia, serif`;
                 
                 const xName = canvas.width / 2;
@@ -208,17 +206,15 @@
                 ctx.fillText(nameDisplay.innerText, xName, yName);
 
                 // --- RYSOWANIE DATY ---
-                // Tekst wyrównujemy do środka pozycji kropek dla daty
                 ctx.textAlign = 'center';
-                const fontSizeDate = Math.round(canvas.width * 0.028);
+                const fontSizeDate = Math.round(canvas.width * 0.03);
                 ctx.font = `italic bold ${fontSizeDate}px "Playfair Display", Georgia, serif`;
                 
-                // Pozycja X i Y dopasowana do lewego dolnego rogu szablonu
                 const xDate = canvas.width * 0.27;
                 const yDate = canvas.height * 0.915; 
                 ctx.fillText(currentDateText, xDate, yDate);
 
-                // 4. Pobieranie gotowego pliku
+                // 4. Pobieranie pliku
                 setTimeout(() => {
                     const dataUrl = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
