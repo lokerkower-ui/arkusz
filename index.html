@@ -103,15 +103,15 @@
         /* Dynamiczny tekst nakładany na zdjęcie w podglądzie */
         .overlay-text {
             position: absolute;
-            /* TUTAJ DOPASOWUJESZ POZYCJĘ TEKSTU NA PODGLĄDZIE (w % względem zdjęcia) */
-            top: 55%; 
+            /* Dopasowano pozycję pionową pod napis na certyfikacie */
+            top: 64.5%; 
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
+            width: 85%;
             text-align: center;
             font-family: 'Playfair Display', serif;
             font-style: italic;
-            font-size: 5vw; /* Skaluje się razem z wielkością obrazka */
+            font-size: 4.2vw; /* Skaluje się proporcjonalnie do zdjęcia */
             color: #0b2265;
             font-weight: 600;
             white-space: nowrap;
@@ -156,37 +156,34 @@
             downloadBtn.innerText = '⌛ Przetwarzanie...';
             downloadBtn.disabled = true;
 
-            // Ładowanie szablonu jako obiektu Image w JavaScript
             const certTemplate = new Image();
             certTemplate.crossOrigin = "anonymous"; 
-            certTemplate.src = certImageSource.src; // Pobiera z tagu <img> powyżej
+            certTemplate.src = certImageSource.src;
 
             certTemplate.onload = function() {
                 const canvas = document.createElement('canvas');
-                // Canvas przyjmuje dokładnie takie wymiary, jakie ma Twoje zdjęcie certyfikat.jpg
                 canvas.width = certTemplate.width;
                 canvas.height = certTemplate.height;
                 const ctx = canvas.getContext('2d');
 
-                // 1. Rysujemy Twoje gotowe zdjęcie jako tło
+                // 1. Rysujemy tło
                 ctx.drawImage(certTemplate, 0, 0, canvas.width, canvas.height);
 
                 // 2. Konfigurujemy styl tekstu imienia i nazwiska
                 ctx.textAlign = 'center';
-                ctx.fillStyle = '#0b2265'; // Kolor czcionki (możesz zmienić np. na czarny #000000)
+                ctx.fillStyle = '#0b2265'; // Kolor dobrany pod resztę napisów
                 
-                // Dynamicznie obliczamy wielkość czcionki, żeby pasowała do rozdzielczości zdjęcia
-                const fontSize = Math.round(canvas.width * 0.048); 
+                // Proporcjonalny rozmiar czcionki na generowanym pliku
+                const fontSize = Math.round(canvas.width * 0.042); 
                 ctx.font = `italic bold ${fontSize}px "Playfair Display", Georgia, serif`;
 
                 // 3. Wpisujemy tekst na grafikę
-                // TUTAJ DOPASOWUJESZ POZYCJĘ TEKSTU NA FINALNYM PLIKU (X, Y)
                 const xNaZdjeciu = canvas.width / 2; // Środek szerokości
-                const yNaZdjeciu = canvas.height * 0.55; // 55% wysokości zdjęcia od góry
+                const yNaZdjeciu = canvas.height * 0.645; // Dopasowanie pionowe do kropkowanej linii
                 
                 ctx.fillText(nameDisplay.innerText, xNaZdjeciu, yNaZdjeciu);
 
-                // 4. Pobieranie gotowego, scalonego pliku
+                // 4. Pobieranie gotowego pliku
                 setTimeout(() => {
                     const dataUrl = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
@@ -202,7 +199,7 @@
             };
 
             certTemplate.onerror = function() {
-                alert("Błąd: Nie znaleziono pliku 'certyfikat.jpg' w tym samym folderze!");
+                alert("Błąd: Nie można załadować pliku obrazu szablonu!");
                 downloadBtn.innerText = '📥 Generuj i Pobierz';
                 downloadBtn.disabled = false;
             };
