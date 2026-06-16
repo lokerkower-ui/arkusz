@@ -85,7 +85,7 @@
             color: #fff;
         }
 
-        /* Kontener podglądu z włączonym Container Queries dla idealnego skalowania czcionek */
+        /* Kontener podglądu z Container Queries */
         .preview-box {
             position: relative;
             width: 100%;
@@ -93,7 +93,7 @@
             border-radius: 4px;
             overflow: hidden;
             display: inline-block;
-            container-type: inline-size; /* Pozwala czcionkom skalować się względem szerokości TEGO kontenera, a nie okna */
+            container-type: inline-size;
         }
 
         .preview-box img {
@@ -111,25 +111,25 @@
             position: absolute;
         }
 
-        /* Imię i nazwisko - używa cqi (procent szerokości kontenera podglądu) */
+        /* Imię i nazwisko */
         .overlay-text {
             top: 64.5%; 
             left: 50%;
             transform: translate(-50%, -50%);
             width: 85%;
             text-align: center;
-            font-size: 4.5cqi; /* Sztywno zakleszczone ze skalą obrazka */
+            font-size: 4.5cqi;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* Data w lewym dolnym rogu - używa cqi */
+        /* Data wyrównana idealnie na kropkach "Kraków dn..." */
         .overlay-date {
-            bottom: 8.5%;
-            left: 27%;
+            bottom: 8.1%;
+            left: 29.5%;
             transform: translate(-50%, 50%);
-            font-size: 3cqi; /* Sztywno zakleszczone ze skalą obrazka */
+            font-size: 3cqi;
         }
     </style>
 </head>
@@ -160,7 +160,6 @@
         const certImageSource = document.getElementById('cert-image-source');
         const downloadBtn = document.getElementById('download-btn');
 
-        // Funkcja do pobierania dzisiejszej daty w formacie DD.MM.YYYY r.
         function getFormattedDate() {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
@@ -193,10 +192,10 @@
                 // 1. Rysujemy tło
                 ctx.drawImage(certTemplate, 0, 0, canvas.width, canvas.height);
 
-                // 2. Konfiguracja wspólna dla napisów
+                // 2. Kolor czcionki
                 ctx.fillStyle = '#0b2265';
 
-                // --- RYSOWANIE IMIENIA (Canvas używa stałych pikseli obrazu źródłowego, więc skala jest zawsze idealna) ---
+                // --- RYSOWANIE IMIENIA ---
                 ctx.textAlign = 'center';
                 const fontSizeName = Math.round(canvas.width * 0.045); 
                 ctx.font = `italic bold ${fontSizeName}px "Playfair Display", Georgia, serif`;
@@ -205,13 +204,13 @@
                 const yName = canvas.height * 0.645;
                 ctx.fillText(nameDisplay.innerText, xName, yName);
 
-                // --- RYSOWANIE DATY ---
+                // --- RYSOWANIE DATY (Zsynchronizowane z CSS) ---
                 ctx.textAlign = 'center';
                 const fontSizeDate = Math.round(canvas.width * 0.03);
                 ctx.font = `italic bold ${fontSizeDate}px "Playfair Display", Georgia, serif`;
                 
-                const xDate = canvas.width * 0.27;
-                const yDate = canvas.height * 0.915; 
+                const xDate = canvas.width * 0.295;
+                const yDate = canvas.height * 0.922; 
                 ctx.fillText(currentDateText, xDate, yDate);
 
                 // 4. Pobieranie pliku
