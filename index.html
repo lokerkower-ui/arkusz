@@ -85,7 +85,7 @@
             color: #fff;
         }
 
-        /* Kontener podglądu, w którym na Twoje zdjęcie nakładamy tekst */
+        /* Kontener podglądu */
         .preview-box {
             position: relative;
             width: 100%;
@@ -100,24 +100,35 @@
             display: block;
         }
 
-        /* Dynamiczny tekst nakładany na zdjęcie w podglądzie */
-        .overlay-text {
+        /* Wspólne style dla czcionki ozdobnej */
+        .cert-font {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #0b2265;
+            font-weight: 600;
+            pointer-events: none;
             position: absolute;
-            /* Dopasowano pozycję pionową pod napis na certyfikacie */
+        }
+
+        /* Imię i nazwisko */
+        .overlay-text {
             top: 64.5%; 
             left: 50%;
             transform: translate(-50%, -50%);
             width: 85%;
             text-align: center;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 4.2vw; /* Skaluje się proporcjonalnie do zdjęcia */
-            color: #0b2265;
-            font-weight: 600;
+            font-size: 4.2vw;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            pointer-events: none;
+        }
+
+        /* Data w lewym dolnym rogu */
+        .overlay-date {
+            bottom: 9%;
+            left: 27%;
+            transform: translate(-50%, 50%);
+            font-size: 2.8vw;
         }
     </style>
 </head>
@@ -135,7 +146,8 @@
 
         <div class="preview-box">
             <img id="cert-image-source" src="image.png" alt="Szablon Certyfikatu">
-            <div class="overlay-text" id="name-display">Jan Kowalski</div>
+            <div class="cert-font overlay-text" id="name-display">Jan Kowalski</div>
+            <div class="cert-font overlay-date" id="date-display"></div>
         </div>
 
     </div>
@@ -143,10 +155,24 @@
     <script>
         const nameInput = document.getElementById('name-input');
         const nameDisplay = document.getElementById('name-display');
+        const dateDisplay = document.getElementById('date-display');
         const certImageSource = document.getElementById('cert-image-source');
         const downloadBtn = document.getElementById('download-btn');
 
-        // Podgląd w czasie rzeczywistym
+        // Funkcja do pobierania dzisiejszej daty w formacie DD.MM.YYYY r.
+        function getFormattedDate() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Styczeń to 0!
+            const yyyy = today.getFullYear();
+            return `${dd}.${mm}.${yyyy} r.`;
+        }
+
+        // Ustawienie aktualnej daty na starcie w podglądzie
+        const currentDateText = getFormattedDate();
+        dateDisplay.innerText = currentDateText;
+
+        // Podgląd imienia w czasie rzeczywistym
         nameInput.addEventListener('input', (e) => {
             nameDisplay.innerText = e.target.value.trim() || 'Jan Kowalski';
         });
@@ -169,19 +195,28 @@
                 // 1. Rysujemy tło
                 ctx.drawImage(certTemplate, 0, 0, canvas.width, canvas.height);
 
-                // 2. Konfigurujemy styl tekstu imienia i nazwiska
-                ctx.textAlign = 'center';
-                ctx.fillStyle = '#0b2265'; // Kolor dobrany pod resztę napisów
-                
-                // Proporcjonalny rozmiar czcionki na generowanym pliku
-                const fontSize = Math.round(canvas.width * 0.042); 
-                ctx.font = `italic bold ${fontSize}px "Playfair Display", Georgia, serif`;
+                // 2. Konfiguracja wspólna dla napisów
+                ctx.fillStyle = '#0b2265';
 
-                // 3. Wpisujemy tekst na grafikę
-                const xNaZdjeciu = canvas.width / 2; // Środek szerokości
-                const yNaZdjeciu = canvas.height * 0.645; // Dopasowanie pionowe do kropkowanej linii
+                // --- RYSOWANIE IMIENIA ---
+                ctx.textAlign = 'center';
+                const fontSizeName = Math.round(canvas.width * 0.042); 
+                ctx.font = `italic bold ${fontSizeName}px "Playfair Display", Georgia, serif`;
                 
-                ctx.fillText(nameDisplay.innerText, xNaZdjeciu, yNaZdjeciu);
+                const xName = canvas.width / 2;
+                const yName = canvas.height * 0.645;
+                ctx.fillText(nameDisplay.innerText, xName, yName);
+
+                // --- RYSOWANIE DATY ---
+                // Tekst wyrównujemy do środka pozycji kropek dla daty
+                ctx.textAlign = 'center';
+                const fontSizeDate = Math.round(canvas.width * 0.028);
+                ctx.font = `italic bold ${fontSizeDate}px "Playfair Display", Georgia, serif`;
+                
+                // Pozycja X i Y dopasowana do lewego dolnego rogu szablonu
+                const xDate = canvas.width * 0.27;
+                const yDate = canvas.height * 0.915; 
+                ctx.fillText(currentDateText, xDate, yDate);
 
                 // 4. Pobieranie gotowego pliku
                 setTimeout(() => {
