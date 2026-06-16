@@ -124,11 +124,11 @@
             text-overflow: ellipsis;
         }
 
-        /* Zsynchronizowana pozycja z Canvasem (od góry: 91.9%, od lewej: 30.5%) */
+        /* TWOJE KORDY DLA STRONY (CSS) */
         .overlay-date {
-            top: 91.9%;
-            left: 30.5%;
-            transform: translate(-50%, -50%);
+            bottom: 11%;
+            left: 38%;
+            transform: translate(-50%, 50%);
             font-size: 2.9cqi;
         }
     </style>
@@ -211,9 +211,9 @@
                 const fontSizeDate = Math.round(canvas.width * 0.029);
                 ctx.font = `italic bold ${fontSizeDate}px "Playfair Display", Georgia, serif`;
                 
-                // Identyczne wartości jak w klasie .overlay-date w CSS
-                const xDate = canvas.width * 0.305;
-                const yDate = canvas.height * 0.919; 
+                // TWOJE KORDY DLA PLIKU (Zsynchronizowane z CSS: 38% szerokości i 89% wysokości od góry)
+                const xDate = canvas.width * 0.38;
+                const yDate = canvas.height * 0.89; 
                 ctx.fillText(currentDateText, xDate, yDate);
 
                 // 4. Pobieranie pliku
