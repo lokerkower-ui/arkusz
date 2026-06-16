@@ -124,11 +124,11 @@
             text-overflow: ellipsis;
         }
 
-        /* Skorygowana pozycja daty idealnie na kropkach w podglądzie HTML */
+        /* Zsynchronizowana pozycja z Canvasem (od góry: 91.9%, od lewej: 30.5%) */
         .overlay-date {
-            bottom: 11%;
-            left: 37%;
-            transform: translate(-50%, 50%);
+            top: 91.9%;
+            left: 30.5%;
+            transform: translate(-50%, -50%);
             font-size: 2.9cqi;
         }
     </style>
@@ -164,7 +164,7 @@
         function getFormattedDate() {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Miesiące są od 0 do 11
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
             const yyyy = today.getFullYear();
             return `${dd}.${mm}.${yyyy} r.`;
         }
@@ -206,12 +206,12 @@
                 const yName = canvas.height * 0.645;
                 ctx.fillText(nameDisplay.innerText, xName, yName);
 
-                // --- RYSOWANIE AKTUALNEJ DATY (Dopasowane mikroskopijnie na Canvasie) ---
+                // --- RYSOWANIE AKTUALNEJ DATY ---
                 ctx.textAlign = 'center';
                 const fontSizeDate = Math.round(canvas.width * 0.029);
                 ctx.font = `italic bold ${fontSizeDate}px "Playfair Display", Georgia, serif`;
                 
-                // Dokładne współrzędne nakładania na kropki obrazka
+                // Identyczne wartości jak w klasie .overlay-date w CSS
                 const xDate = canvas.width * 0.305;
                 const yDate = canvas.height * 0.919; 
                 ctx.fillText(currentDateText, xDate, yDate);
