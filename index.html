@@ -124,12 +124,12 @@
             text-overflow: ellipsis;
         }
 
-        /* Data wyrównana idealnie na kropkach "Kraków dn..." */
+        /* Skorygowana pozycja daty idealnie na kropkach w podglądzie HTML */
         .overlay-date {
-            bottom: 8.1%;
-            left: 29.5%;
+            bottom: 8.6%;
+            left: 30.5%;
             transform: translate(-50%, 50%);
-            font-size: 3cqi;
+            font-size: 2.9cqi;
         }
     </style>
 </head>
@@ -160,14 +160,16 @@
         const certImageSource = document.getElementById('cert-image-source');
         const downloadBtn = document.getElementById('download-btn');
 
+        // Funkcja generująca zawsze aktualną dzisiejszą datę
         function getFormattedDate() {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Miesiące są od 0 do 11
             const yyyy = today.getFullYear();
             return `${dd}.${mm}.${yyyy} r.`;
         }
 
+        // Pobranie i wstrzyknięcie dzisiejszej daty na starcie
         const currentDateText = getFormattedDate();
         dateDisplay.innerText = currentDateText;
 
@@ -204,13 +206,14 @@
                 const yName = canvas.height * 0.645;
                 ctx.fillText(nameDisplay.innerText, xName, yName);
 
-                // --- RYSOWANIE DATY (Zsynchronizowane z CSS) ---
+                // --- RYSOWANIE AKTUALNEJ DATY (Dopasowane mikroskopijnie na Canvasie) ---
                 ctx.textAlign = 'center';
-                const fontSizeDate = Math.round(canvas.width * 0.03);
+                const fontSizeDate = Math.round(canvas.width * 0.029);
                 ctx.font = `italic bold ${fontSizeDate}px "Playfair Display", Georgia, serif`;
                 
-                const xDate = canvas.width * 0.295;
-                const yDate = canvas.height * 0.922; 
+                // Dokładne współrzędne nakładania na kropki obrazka
+                const xDate = canvas.width * 0.305;
+                const yDate = canvas.height * 0.919; 
                 ctx.fillText(currentDateText, xDate, yDate);
 
                 // 4. Pobieranie pliku
